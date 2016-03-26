@@ -1,2 +1,0 @@
-# Goodyear
-Proyect goodyear

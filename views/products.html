@@ -67,12 +67,16 @@
           <div id="response">
 
           </div>
+          <div id="divProducts" class="col-md-12">
+
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 <script>
+var id_select = 'NA';
 function onClickNew() {
   var typeProduct = document.getElementById('typeProduct').value;
   var barcode = document.getElementById('barcode').value;
@@ -107,21 +111,23 @@ function onClickNew() {
 }
 
 function onClickModify() {
-  var id = document.getElementById('all_products').value;
-  if (!id || id === 'NA') {
+  if (!id_select || id_select === 'NA') {
     document.getElementById('response').innerHTML = "No se ha seleccionado ningun usuario";
   } else {
+    var barcode = document.getElementById('barcode').value;
     var name = document.getElementById('name').value;
-    var address = document.getElementById('address').value;
-    var colony = document.getElementById('colony').value;
-    var state = document.getElementById('state').value;
-    var phone = document.getElementById('phone').value;
-    var contactName = document.getElementById('contactName').value;
-    var rfc = document.getElementById('rfc').value;
-    var pc = document.getElementById('pc').value;
-    var city = document.getElementById('city').value;
-    var cellPhone = document.getElementById('cellPhone').value;
-    if (phone === '' || contactName === '' || !name) {
+    var description = document.getElementById('description').value;
+    var key_ = document.getElementById('key').value;
+    var brand = document.getElementById('brand').value;
+    var model = document.getElementById('model').value;
+    var measure = document.getElementById('measure').value;
+    var treadware = document.getElementById('treadware').value;
+    var loadIndex = document.getElementById('loadIndex').value;
+    var loadSpeed = document.getElementById('loadSpeed').value;
+    var retailPrice = document.getElementById('retailPrice').value;
+    var wholesalePrice = document.getElementById('wholesalePrice').value;
+    var specialPrice = document.getElementById('specialPrice').value;
+    if (name === '' || key_ === '') {
       alert('Ingresa datos obligatorios.');
     } else {
       var xmlhttp = new XMLHttpRequest();
@@ -133,45 +139,62 @@ function onClickModify() {
         }
       };
 
-      xmlhttp.open("GET", "links/products.php?operation=modify&name=" + name + "&address=" + address + "&colony=" + colony + "&state=" + state + "&phone=" + phone + "&contact_name=" + contactName + "&rfc=" + rfc + "&pc=" + pc + "&pc=" + pc + "&city=" + city + "&cell_phone=" + cellPhone + "&id=" + id);
+      xmlhttp.open("GET", "links/products.php?operation=modify&barcode=" + barcode + "&name=" + name + "&description=" + description + "&key_=" + key_ + "&brand=" + brand + "&model=" + model + "&measure=" + measure + "&treadware=" + treadware + "&load_index=" + loadIndex + "&load_speed=" + loadSpeed + "&retail_price=" + retailPrice + "&wholesale_price=" + wholesalePrice + "&special_price=" + specialPrice + "&id=" + id_select);
 
       xmlhttp.send();
     }
   }
 }
 
-function onClickSelect() {
-  var select = document.getElementById('all_products').value;
+function onClickSelect(id_product) {
+  id_select = id_product;
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
       var res = xmlhttp.responseText.split(',');
-      document.getElementById('name').value = res[0];
-      document.getElementById('address').value = res[1];
-      document.getElementById('colony').value = res[2];
-      document.getElementById('state').value = res[3];
-      document.getElementById('phone').value = res[4];
-      document.getElementById('contactName').value = res[5];
-      document.getElementById('rfc').value = res[6];
-      document.getElementById('pc').value = res[7];
-      document.getElementById('city').value = res[8];
-      document.getElementById('cellPhone').value = res[9];
+      document.getElementById('barcode').value = res[0];
+      document.getElementById('name').value = res[1];
+      document.getElementById('description').value = res[2];
+      document.getElementById('key').value = res[3];
+      document.getElementById('brand').value = res[4];
+      document.getElementById('model').value = res[5];
+      document.getElementById('measure').value = res[6];
+      document.getElementById('treadware').value = res[7];
+      document.getElementById('loadIndex').value = res[8];
+      document.getElementById('loadSpeed').value = res[9];
+      document.getElementById('retailPrice').value = res[10];
+      document.getElementById('wholesalePrice').value = res[11];
+      document.getElementById('specialPrice').value = res[12];
     }
   };
 
-  xmlhttp.open("GET", "links/products.php?operation=selectClient&id=" + select);
+  xmlhttp.open("GET", "links/products.php?operation=selectProduct&id=" + id_product);
   xmlhttp.send();
 }
 
-function onClickBrowse(type) {
+function onClickBrowserBarcode() {
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
-      document.getElementById('all_products').innerHTML = xmlhttp.responseText;
+      document.getElementById('divProducts').innerHTML = xmlhttp.responseText;
     }
   };
 
-  xmlhttp.open("GET", "links/products.php?operation=browse");
+  var BProduct = document.getElementById('barcodeProduct').value;
+  xmlhttp.open("GET", "links/products.php?operation=browserBarcode&content=" + BProduct);
+  xmlhttp.send();
+}
+
+function onClickBrowserName() {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
+      document.getElementById('divProducts').innerHTML = xmlhttp.responseText;
+    }
+  };
+
+  var BProduct = document.getElementById('nameProduct').value;
+  xmlhttp.open("GET", "links/products.php?operation=browserName&content=" + BProduct);
   xmlhttp.send();
 }
 
@@ -203,18 +226,16 @@ function onClickDelete() {
         <div class="row">
           <h3>Escribe tu busqueda, y da clic en Buscar.</h3>
           <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-label">Nombre</label>
-              <input id="nameProduct" type="text" class="form-control" placeholder="Ingrese el nombre del producto...">
-              <label class="form-label">Código de Barras</label>
-              <input id="barcodeProduct" type="text" class="form-control" placeholder="Ingrese el código de barras...">
-            </div>
+            <label class="form-label">Nombre</label>
+            <input id="nameProduct" type="text" class="form-control" placeholder="Ingrese el nombre del producto...">
+            <button onclick="onClickBrowserName()" type="button" class="btn btn-primary btn-embossed" data-dismiss="modal">Seleccionar</button>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Código de Barras</label>
+            <input id="barcodeProduct" type="text" class="form-control" placeholder="Ingrese el código de barras...">
+            <button onclick="onClickBrowserBarcode()" type="button" class="btn btn-primary btn-embossed" data-dismiss="modal">Seleccionar</button>
           </div>
         </div>
-      </div>
-      <div class="modal-footer bg-gray-light">
-        <button type="button" class="btn btn-default btn-embossed" data-dismiss="modal">Cancelar</button>
-        <button onclick="onClickSelect()" type="button" class="btn btn-primary btn-embossed" data-dismiss="modal">Seleccionar</button>
       </div>
     </div>
   </div>

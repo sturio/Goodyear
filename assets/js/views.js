@@ -41,6 +41,12 @@ $(document).ready(function () {
     $('#content').load("views/quoter.html");
   });
 
+  $("#items_input").on("click", function(event)
+  {
+    event.preventDefault();
+    $('#content').load("views/input-products.html");
+  });
+
   $("#list2").on("click", function(event)
   {
     event.preventDefault();
@@ -81,6 +87,12 @@ $(document).ready(function () {
   {
     event.preventDefault();
     $('#content').load("views/quoter.html");
+  });
+
+  $("#items_input2").on("click", function(event)
+  {
+    event.preventDefault();
+    $('#content').load("views/input-products.html");
   });
 
   $("#index").on("click", function(event)

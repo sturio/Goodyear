@@ -11,33 +11,117 @@
 	      <p>Selecciona Clave. Agrega cantidad, proveedor y costo unitario, y da clic en Agregar.</p>
 	      <div class="row">
 	        <div class="col-md-12">
-	          <div class="form-group">
-	            <label class="form-label">Clave</label>
-	            <input type="text" class="form-control" placeholder="Ingrese Clave">
-	          </div>
+	          <button class="btn btn-dark m-t-5" data-toggle="modal" data-target="#modal-bootstrap-timepicker">Escoger Cliente</button>
 	        </div>
+					<div id="divProducts" class="col-md-12">
+
+          </div>
 	        <div class="col-md-12">
 	          <div class="col-md-6">
 	            <div class="form-group">
 	              <label class="form-label">Proovedor</label>
-	              <input type="text" class="form-control" placeholder="Ingrese Proovedor">
+	              <input id="provider" type="text" class="form-control" placeholder="Ingrese Proovedor">
 	            </div>
 	            <div class="form-group">
 	              <label class="form-label">Cantidad</label>
-	              <input type="text" class="form-control" placeholder="Ingrese Cantidad">
+	              <input id="amount" type="text" class="form-control" placeholder="Ingrese Cantidad">
 	            </div>
 	            <div class="form-group">
 	              <label class="form-label">Costo Unitario</label>
-	              <input type="text" class="form-control" placeholder="Ingrese Costo Unitario">
+	              <input id="unitCost" type="text" class="form-control" placeholder="Ingrese Costo Unitario">
 	            </div>
 	          </div>
 	        </div>
 	        <div class="col-md-6">
-	          <button type="button" class="btn btn-success btn-square">Agregar</button>
-	          <button type="button" class="btn btn-danger btn-square">Cancelar</button>
+	          <button onclick="onClickAdd()" type="button" class="btn btn-success btn-square">Agregar</button>
 	        </div>
+					<div id="response">
+
+					</div>
 	      </div>
 	    </div>
 	  </div>
 	</div>
+</div>
+<script>
+var id_select = 'NA';
+
+function onClickAdd() {
+  var provider = document.getElementById('provider').value;
+  var amount = document.getElementById('amount').value;
+  var unitCost = document.getElementById('unitCost').value;
+
+  if (!provider || !amount || !unitCost) {
+    alert('Favor de llenar todos los campos.');
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+      if (xmlhttp.readyState === 1) {
+        document.getElementById('response').innerHTML = 'Procesando...';
+      } else if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
+        document.getElementById('response').innerHTML = xmlhttp.responseText;
+      }
+    };
+
+    xmlhttp.open("GET", "links/input-products.php?operation=add&provider=" + provider + "&amount=" + amount + "&unit_cost=" + unitCost + "&id=" + id_select);
+    xmlhttp.send();
+  }
+}
+
+function onClickSelect(id_product, key, barcode, name) {
+  id_select = id_product;
+  document.getElementById('divProducts').innerHTML = '<h2>Ha seleccionado: <b>' + name + '.</b></h2><h2>Clave: <b>' + key + '.</b></h2><h2>Codigo de barras: <b>' + barcode + '.</b></h2>';
+}
+
+function onClickBrowserBarcode() {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
+      document.getElementById('divProducts').innerHTML = xmlhttp.responseText;
+    }
+  };
+
+  var BProduct = document.getElementById('barcodeProduct').value;
+  xmlhttp.open("GET", "links/input-products.php?operation=browserBarcode&content=" + BProduct);
+  xmlhttp.send();
+}
+
+function onClickBrowserName() {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
+      document.getElementById('divProducts').innerHTML = xmlhttp.responseText;
+    }
+  };
+
+  var BProduct = document.getElementById('nameProduct').value;
+  xmlhttp.open("GET", "links/input-products.php?operation=browserName&content=" + BProduct);
+  xmlhttp.send();
+}
+
+</script>
+<div class="modal fade" id="modal-bootstrap-timepicker" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icons-office-52"></i></button>
+        <h4 class="modal-title"><strong>Seleccion de </strong> Producto</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <h3>Escribe tu busqueda, y da clic en Buscar.</h3>
+          <div class="col-md-6">
+            <label class="form-label">Nombre</label>
+            <input id="nameProduct" type="text" class="form-control" placeholder="Ingrese el nombre del producto...">
+            <button onclick="onClickBrowserName()" type="button" class="btn btn-primary btn-embossed" data-dismiss="modal">Seleccionar</button>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Código de Barras</label>
+            <input id="barcodeProduct" type="text" class="form-control" placeholder="Ingrese el código de barras...">
+            <button onclick="onClickBrowserBarcode()" type="button" class="btn btn-primary btn-embossed" data-dismiss="modal">Seleccionar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

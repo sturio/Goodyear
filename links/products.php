@@ -30,6 +30,17 @@
       } else {
         $query = "INSERT INTO products (type_product, barcode, name, description, key_, brand, model, measure, treadware, load_index, load_speed, retail_price, wholesale_price, special_price, last_date) VALUES ('" . $type_product . "','" . $barcode . "','" . $name . "','" . $description . "','" . $key . "','" . $brand . "','" . $model . "','" . $measure . "','" . $treadware . "','" . $load_index . "','" . $load_speed . "','" . $retail_price . "','" . $wholesale_price . "','" . $special_price . "',now());";
         $result = mysql_query($query) or die ('Consulta fallida: ' . mysql_error());
+
+        $query = "SELECT id FROM products where name ='" . $name ."';";
+        $result = mysql_query($query) or die ('Consulta fallida: ' . mysql_error());
+        $id = 0;
+        while ($row = mysql_fetch_assoc($result)) {
+          $id = $row['id'];
+        }
+
+        $query = "INSERT INTO stocks (id_product, amount) VALUES ('" . $id . "', 0);";
+        $result = mysql_query($query) or die ('Consulta fallida: ' . mysql_error());
+
         echo 'Producto agregado.';
       }
     }

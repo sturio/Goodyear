@@ -14,32 +14,42 @@
             <div class="panel-content">
               <div class="col-md-12">
                 <h4>Cliente</h4>
-                <div class="col-md-4">
-                  <label>Nombre de Cliente</label>
-                  <input type="text" class="form-control" placeholder="Filtrar por Nombre de Cliente">
+                <div class="col-md-6">
+                  <div class="col-md-8">
+                    <label>Nombre de Cliente</label>
+                    <input id="clientName" type="text" class="form-control" placeholder="Filtrar por Nombre de Cliente">
+                  </div>
+                  <div class="col-md-4">
+                    <br />
+                    <button onclick="onClickClients()" type="button" class="btn btn-primary btn-square">Buscar</button>
+                  </div>
                 </div>
-                <div class="col-md-8">
-                  <p class="form-label"><b>Credito:</b> 30,000</p>
-                  <p class="form-label"><b>Tipo:</b> Mayoreo</p>
+                <div class="col-md-6">
+                  <p id="nameClient" class="form-label"></p>
+                  <p id="credit" class="form-label"></p>
+                  <p id="typeCost" class="form-label"></p>
+                </div>
+                <div id="response" class="col-md-12">
+
                 </div>
               </div>
               <div class="col-md-12 border-top">
                 <h4>Productos</h4>
                 <div class="col-md-4">
                   <label>Codigo de Barras</label>
-                  <input type="text" class="form-control" placeholder="Filtrar por Codigo de Barras">
+                  <input id="barcode" type="text" class="form-control" placeholder="Filtrar por Codigo de Barras">
                 </div>
                 <div class="col-md-3">
                   <label>Clave</label>
-                  <input type="text" class="form-control" placeholder="Filtrar por Clave">
+                  <input id="key" type="text" class="form-control" placeholder="Filtrar por Clave">
                 </div>
                 <div class="col-md-3">
                   <label>Nombre de Producto</label>
-                  <input type="text" class="form-control" placeholder="Filtrar por Nombre de Producto">
+                  <input id="productName" type="text" class="form-control" placeholder="Filtrar por Nombre de Producto">
                 </div>
                 <div class="col-md-2">
                   <br  />
-                  <button type="button" class="btn btn-primary btn-square">Buscar</button>
+                  <button onclick="onClickProducts()" type="button" class="btn btn-primary btn-square">Buscar</button>
                 </div>
               </div>
               <div class="col-md-12 border-top">
@@ -57,7 +67,7 @@
                       <th>Precio Especial</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="responseProduct">
                     <tr>
                       <td>Llanta</td>
                       <td>19983127322</td>
@@ -156,6 +166,107 @@
             <button type="button" class="btn btn-primary btn-square">Remision</button>
             <button type="button" class="btn btn-warning btn-square">Credito</button>
             <button type="button" class="btn btn-danger btn-square">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var idSelect = 'NA';
+
+function onClickClients() {
+  var name = document.getElementById('clientName').value;
+
+  if (!name) {
+    alert('Favor de escribir un nombre de cliente.');
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+      if (xmlhttp.readyState === 1) {
+        document.getElementById('response').innerHTML = 'Procesando...';
+      } else if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
+        document.getElementById('response').innerHTML = xmlhttp.responseText;
+      }
+    };
+
+    xmlhttp.open("GET", "links/quoter.php?operation=browserClient&name=" + name);
+    xmlhttp.send();
+  }
+}
+
+function onClickProducts() {
+  var barcode = document.getElementById('barcode').value;
+  var key = document.getElementById('key').value;
+  var productName = document.getElementById('productName').value;
+
+  if (!barcode && !key && !productName) {
+    alert('Favor de ingresar algun valor');
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+      if (xmlhttp.readyState === 1) {
+        document.getElementById('responseProduct').innerHTML = 'Procesando...';
+      } else if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
+        document.getElementById('responseProduct').innerHTML = xmlhttp.responseText;
+      }
+    };
+
+    xmlhttp.open("GET", "links/quoter.php?operation=browserProduct&barcode=" + barcode + "&key=" + key + "&product_name=" + productName);
+    xmlhttp.send();
+  }
+}
+
+function onClickSelectName(id, name, credit, limitCredit, typeCost) {
+  idSelect = id;
+  document.getElementById('response').innerHTML = '<div></div>';
+  document.getElementById('nameClient').innerHTML = '<b>Nombre Comercial / Razón Social: </b>' + name;
+  document.getElementById('credit').innerHTML = '<b>Credito: </b>' + limitCredit;
+  document.getElementById('typeCost').innerHTML = '<b>Tipo: </b>' + typeCost;
+}
+
+function onClickAdd() {
+  var provider = document.getElementById('provider').value;
+  var amount = document.getElementById('amount').value;
+  var unitCost = document.getElementById('unitCost').value;
+
+  if (!provider || !amount || !unitCost) {
+    alert('Favor de llenar todos los campos.');
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+      if (xmlhttp.readyState === 1) {
+        document.getElementById('response').innerHTML = 'Procesando...';
+      } else if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
+        document.getElementById('response').innerHTML = xmlhttp.responseText;
+      }
+    };
+
+    xmlhttp.open("GET", "links/input-products.php?operation=add&provider=" + provider + "&amount=" + amount + "&unit_cost=" + unitCost + "&id=" + idSelect);
+    xmlhttp.send();
+  }
+}
+
+</script>
+<div class="modal fade" id="modal-bootstrap-timepicker" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icons-office-52"></i></button>
+        <h4 class="modal-title"><strong>Seleccion de </strong> Producto</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <h3>Escribe tu busqueda, y da clic en Buscar.</h3>
+          <div class="col-md-6">
+            <label class="form-label">Nombre</label>
+            <input id="nameProduct" type="text" class="form-control" placeholder="Ingrese el nombre del producto...">
+            <button onclick="onClickBrowserName()" type="button" class="btn btn-primary btn-embossed" data-dismiss="modal">Seleccionar</button>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Código de Barras</label>
+            <input id="barcodeProduct" type="text" class="form-control" placeholder="Ingrese el código de barras...">
+            <button onclick="onClickBrowserBarcode()" type="button" class="btn btn-primary btn-embossed" data-dismiss="modal">Seleccionar</button>
           </div>
         </div>
       </div>

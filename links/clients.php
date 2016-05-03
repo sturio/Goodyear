@@ -12,14 +12,24 @@
     $rfc = $_REQUEST['rfc'];
     $pc = $_REQUEST['pc'];
     $city = $_REQUEST['city'];
+    $noInt = $_REQUEST['noInt'];
+    $noExt = $_REQUEST['noExt'];
+    $email = $_REQUEST['email'];
+    $credit = $_REQUEST['credit'];
+    $type_cost = $_REQUEST['typeCost'];
     $cell_phone = $_REQUEST['cell_phone'];
+    if ($credit > 0) {
+      $thiscredit = 1;
+    } else {
+      $thiscredit = 0;
+    }
 
     $query = "SELECT * FROM clients where name='" . $name ."';";
     $result = mysql_query($query) or die ('Consulta fallida: ' . mysql_error());
     if (mysql_fetch_assoc($result)) {
       echo 'El cliente ya existe. Favor de verificarlo o ingresar uno diferente.';
     } else {
-      $query = "INSERT INTO clients (name, address, colony, state, phone, contact_name, rfc, pc, city, cell_phone, last_date) VALUES ('" . $name . "','" . $address . "','" . $colony . "','" . $state . "','" . $phone . "','" . $contact_name . "','" . $rfc . "','" . $pc . "','" . $city . "','" . $cell_phone . "',now());";
+      $query = "INSERT INTO clients (name, address, colony, state, phone, contact_name, rfc, pc, city, cell_phone, last_date, noInt, noExt, email, limit_credit, credit, type_cost) VALUES ('" . $name . "','" . $address . "','" . $colony . "','" . $state . "','" . $phone . "','" . $contact_name . "','" . $rfc . "','" . $pc . "','" . $city . "','" . $cell_phone . "',now(),'" . $noInt . "','" . $noExt . "','" . $email . "','" . $credit . "','" . $thiscredit . "','" . $type_cost . "');";
       $result = mysql_query($query) or die ('Consulta fallida: ' . mysql_error());
       echo 'Usuario agregado.';
     }
@@ -55,6 +65,25 @@
     if ($_REQUEST['cell_phone']) {
       $query .= " cell_phone='" . $_REQUEST['cell_phone'] . "',";
     }
+    if ($_REQUEST['noInt']) {
+      $query .= " noInt='" . $_REQUEST['noInt'] . "',";
+    }
+    if ($_REQUEST['noExt']) {
+      $query .= " noExt='" . $_REQUEST['noExt'] . "',";
+    }
+    if ($_REQUEST['email']) {
+      $query .= " email='" . $_REQUEST['email'] . "',";
+    }
+    if ($_REQUEST['typeCost']) {
+      $query .= " type_cost='" . $_REQUEST['typeCost'] . "',";
+    }
+    if ($_REQUEST['credit']) {
+      if ($_REQUEST['credit'] > 0) {
+        $query .= " limit_credit=" . $_REQUEST['credit'] . ", credit = 1,";
+      } else {
+        $query .= " limit_credit=" . $_REQUEST['credit'] . ", credit = 0,";
+      }
+    }
     $query .= " last_date=now() WHERE id=" . $_REQUEST['id'] . ";";
     $result = mysql_query($query) or die ('Consulta fallida: ' . mysql_error());
     echo 'Actualizado correctamente.';
@@ -74,7 +103,7 @@
     $query = "SELECT * FROM clients where id=" . $id . ";";
     $result = mysql_query($query) or die ('Consulta fallida: ' . mysql_error());
     $row = mysql_fetch_assoc($result);
-    echo $row['name'] . ',' . $row['address'] . ',' . $row['colony'] . ',' . $row['state'] . ',' . $row['phone'] . ',' . $row['contact_name'] . ',' . $row['rfc'] . ',' . $row['pc'] . ',' . $row['city'] . ',' . $row['cell_phone'];
+    echo $row['name'] . ',' . $row['address'] . ',' . $row['colony'] . ',' . $row['state'] . ',' . $row['phone'] . ',' . $row['contact_name'] . ',' . $row['rfc'] . ',' . $row['pc'] . ',' . $row['city'] . ',' . $row['cell_phone'] . ',' . $row['noInt'] . ',' . $row['noExt'] . ',' . $row['email'] . ',' . $row['limit_credit'] . ',' . $row['type_cost'];
   }
   mysql_close($link);
  ?>

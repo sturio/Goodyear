@@ -21,6 +21,16 @@
             <input id="state" type="text" class="form-control" placeholder="Ingrese Estado">
             <label clas="form-label">* Teléfono</label>
             <input id="phone" type="text" class="form-control" placeholder="Ingrese Teléfono">
+            <label clas="form-label">No Exterior</label>
+            <input id="noExt" type="text" class="form-control" placeholder="Ingrese numero exterior">
+            <label clas="form-label">No Interior</label>
+            <input id="noInt" type="text" class="form-control" placeholder="Ingrese numeri interior">
+            <label for="permisos">Tipo venta</label>
+            <select id="typeCost" class="form-control">
+              <option value="public">Publico</option>
+              <option value="wholesale">Mayoreo</option>
+              <option value="special">Especial</option>
+            </select>
           </div>
           <div class="col-md-6">
             <label class="form-label">* Nombre de Contacto</label>
@@ -33,6 +43,10 @@
             <input id="city" type="text" class="form-control" placeholder="Ingrese Ciudad">
             <label class="form-label">Celular</label>
             <input id="cellPhone" type="text" class="form-control" placeholder="Ingrese Celular">
+            <label clas="form-label">Email</label>
+            <input id="email" type="text" class="form-control" placeholder="Ingrese email">
+            <label clas="form-label">Limite Credito</label>
+            <input id="credit" type="text" class="form-control" placeholder="Ingrese Limite de credito Si lo tiene">
           </div>
           <div class="col-md-12">
             <button onClick="onClickNew()" type="button" class="btn btn-success btn-square">Crear</button>
@@ -48,133 +62,12 @@
     </div>
   </div>
 </div>
-<script>
-function onClickNew() {
-  var name = document.getElementById('name').value;
-  var address = document.getElementById('address').value;
-  var colony = document.getElementById('colony').value;
-  var state = document.getElementById('state').value;
-  var phone = document.getElementById('phone').value;
-  var contactName = document.getElementById('contactName').value;
-  var rfc = document.getElementById('rfc').value;
-  var pc = document.getElementById('pc').value;
-  var city = document.getElementById('city').value;
-  var cellPhone = document.getElementById('cellPhone').value;
-
-  if (!name) {
-    alert('Es obligatorio ingresar Nombre Comercial / Razon Social.');
-  } else {
-    if (phone === '' || contactName === '') {
-      alert('Ingrese Nombre de Contacto y Telefono.');
-    } else {
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === 1) {
-          document.getElementById('response').innerHTML = 'Procesando...';
-        } else if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
-          document.getElementById('response').innerHTML = xmlhttp.responseText;
-        }
-      };
-
-      xmlhttp.open("GET", "links/clients.php?operation=new&name=" + name + "&address=" + address + "&colony=" + colony + "&state=" + state + "&phone=" + phone + "&contact_name=" + contactName + "&rfc=" + rfc + "&pc=" + pc + "&pc=" + pc + "&city=" + city + "&cell_phone=" + cellPhone);
-      xmlhttp.send();
-
-    }
-  }
-}
-
-function onClickModify() {
-  var id = document.getElementById('all_clients').value;
-  if (!id || id === 'NA') {
-    document.getElementById('response').innerHTML = "No se ha seleccionado ningun usuario";
-  } else {
-    var name = document.getElementById('name').value;
-    var address = document.getElementById('address').value;
-    var colony = document.getElementById('colony').value;
-    var state = document.getElementById('state').value;
-    var phone = document.getElementById('phone').value;
-    var contactName = document.getElementById('contactName').value;
-    var rfc = document.getElementById('rfc').value;
-    var pc = document.getElementById('pc').value;
-    var city = document.getElementById('city').value;
-    var cellPhone = document.getElementById('cellPhone').value;
-    if (phone === '' || contactName === '' || !name) {
-      alert('Ingresa datos obligatorios.');
-    } else {
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === 1) {
-          document.getElementById('response').innerHTML = 'Procesando...';
-        } else if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
-          document.getElementById('response').innerHTML = xmlhttp.responseText;
-        }
-      };
-
-      xmlhttp.open("GET", "links/clients.php?operation=modify&name=" + name + "&address=" + address + "&colony=" + colony + "&state=" + state + "&phone=" + phone + "&contact_name=" + contactName + "&rfc=" + rfc + "&pc=" + pc + "&pc=" + pc + "&city=" + city + "&cell_phone=" + cellPhone + "&id=" + id);
-
-      xmlhttp.send();
-    }
-  }
-}
-
-function onClickSelect() {
-  var select = document.getElementById('all_clients').value;
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
-      var res = xmlhttp.responseText.split(',');
-      document.getElementById('name').value = res[0];
-      document.getElementById('address').value = res[1];
-      document.getElementById('colony').value = res[2];
-      document.getElementById('state').value = res[3];
-      document.getElementById('phone').value = res[4];
-      document.getElementById('contactName').value = res[5];
-      document.getElementById('rfc').value = res[6];
-      document.getElementById('pc').value = res[7];
-      document.getElementById('city').value = res[8];
-      document.getElementById('cellPhone').value = res[9];
-    }
-  };
-
-  xmlhttp.open("GET", "links/clients.php?operation=selectClient&id=" + select);
-  xmlhttp.send();
-}
-
-function onClickClients() {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
-      document.getElementById('all_clients').innerHTML = xmlhttp.responseText;
-    }
-  };
-
-  xmlhttp.open("GET", "links/clients.php?operation=clients");
-  xmlhttp.send();
-}
-
-function onClickDelete() {
-  var select = document.getElementById('all_clients').value;
-  if (!select || select === 'NA') {
-    document.getElementById('response').innerHTML = "No se ha seleccionado ningun usuario";
-    } else {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-      if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
-        document.getElementById('response').innerHTML = xmlhttp.responseText;
-      }
-    };
-
-    xmlhttp.open("GET", "links/clients.php?operation=delete&id=" + select);
-    xmlhttp.send();
-  }
-}
-</script>
 <div class="modal fade" id="modal-bootstrap-timepicker" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icons-office-52"></i></button>
-        <h4 class="modal-title"><strong>Seleccion de </strong> Usuario</h4>
+        <h4 class="modal-title"><strong>Seleccion de </strong> Cliente</h4>
       </div>
       <div class="modal-body">
         <div class="row">
@@ -195,3 +88,4 @@ function onClickDelete() {
     </div>
   </div>
 </div>
+<script src="assets/js/views/clients.js"></script>

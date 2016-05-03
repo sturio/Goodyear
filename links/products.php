@@ -38,7 +38,7 @@
           $id = $row['id'];
         }
 
-        $query = "INSERT INTO stocks (id_product, amount) VALUES ('" . $id . "', 0);";
+        $query = "INSERT INTO stocks (id_product, amount, last_date) VALUES ('" . $id . "', 0, now());";
         $result = mysql_query($query) or die ('Consulta fallida: ' . mysql_error());
 
         echo 'Producto agregado.';

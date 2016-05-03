@@ -1,0 +1,135 @@
+CREATE DATABASE SotoGoodyear CHARACTER SET utf8 COLLATE utf8_spanish_ci;;
+USE SotoGoodyear;
+CREATE TABLE clients (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  name varchar(50) NOT NULL,
+  address varchar(80),
+  noInt varchar(10),
+  noExt varchar(10),
+  email varchar(100),
+  colony varchar(50),
+  state varchar(25),
+  phone varchar(15) NOT NULL,
+  contact_name varchar(50) NOT NULL,
+  rfc varchar(25),
+  pc varchar(6),
+  city varchar(25),
+  cell_phone varchar(15),
+  credit int(2),
+  limit_credit int,
+  type_cost varchar(25),
+  last_date datetime NOT NULL
+);
+CREATE TABLE users (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  status binary(1) NOT NULL,
+  user varchar(50) NOT NULL,
+  password varchar(80) NOT NULL,
+  name varchar(25),
+  address varchar(50),
+  city varchar(25),
+  last_name varchar(25),
+  pc varchar(6),
+  state varchar(25),
+  permit varchar(25),
+  check_in varchar(5),
+  check_out varchar(5),
+  last_date datetime NOT NULL
+);
+CREATE TABLE products (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  type_product varchar(50) NOT NULL,
+  barcode varchar(80),
+  name varchar(50),
+  description varchar(250),
+  key varchar(50),
+  brand varchar(25),
+  model varchar(25),
+  measure varchar(25),
+  treadware varchar(25),
+  load_index varchar(25),
+  load_speed varchar(25),
+  retail_price float,
+  wholesale_price float,
+  special_price float,
+  last_date datetime NOT NULL
+);
+CREATE TABLE merchandise_entry (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  id_product mediumint(8) NOT NULL,
+  provider varchar(80),
+  amount int,
+  unit_cost float,
+  last_date datetime NOT NULL
+);
+CREATE TABLE stocks (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  id_product mediumint(8) NOT NULL,
+  amount int,
+  last_date datetime NOT NULL
+);
+CREATE TABLE temp_quoter (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  id_product mediumint(8) NOT NULL,
+  id_client mediumint(8) NOT NULL,
+  id_user mediumint(8) NOT NULL,
+  amount int,
+  unit_cost float,
+  last_date datetime NOT NULL
+);
+CREATE TABLE quoter (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  id_product mediumint(8) NOT NULL,
+  amount float,
+  unit_cost float,
+  invoice varchar(50) NOT NULL,
+  last_date datetime NOT NULL
+);
+CREATE TABLE follow (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  status varchar(25),
+  follow text(1000),
+  date_follow varchar(15),
+  id_invoice mediumint(8) NOT NULL,
+  last_date datetime NOT NULL
+);
+CREATE TABLE documents (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  id_user mediumint(8) NOT NULL,
+  id_client mediumint(8) NOT NULL,
+  id_invoice mediumint(8) NOT NULL,
+  invoice varchar(50) NOT NULL,
+  guide_number varchar(255),
+  payment_method varchar(60),
+  last_digits varchar(4),
+  comments text(500),
+  type varchar(50),
+  status varchar(25),
+  total float,
+  sello text,
+  noCertificado text,
+  certificado text,
+  uuid text,
+  noCertificadoSat text,
+  selloSat text,
+  fechaTimbrado text,
+  last_date datetime NOT NULL
+);
+CREATE TABLE credit (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  id_document mediumint(8) NOT NULL,
+  total_credit float,
+  total_paid_out float,
+  status varchar(25),
+  last_date datetime NOT NULL
+);
+CREATE TABLE credit_paid (
+  id mediumint(8) PRIMARY KEY AUTO_INCREMENT,
+  id_document mediumint(8) NOT NULL,
+  id_user mediumint(8) NOT NULL,
+  paid_out float,
+  last_date datetime NOT NULL
+);
+INSERT INTO users (status, user, password, permit, last_date) VALUES (0,'Clt007',SHA('!StockSoto7190.'), 'client', now());
+
+INSERT INTO users (status, user, password, permit, last_date) VALUES (0,'Admin',SHA('.Soto!Arandas1'), 'admin', now());

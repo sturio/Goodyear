@@ -19,7 +19,7 @@ $(function() {
             var l = Ladda.create(this);
             l.start();
             setTimeout(function() {
-                window.location.href = "dashboard.html";
+                window.location.href = "index.html";
             }, 2000);
         });
         $.backstretch(["assets/images/gallery/login.jpg"],
@@ -28,7 +28,7 @@ $(function() {
             duration: 4000
         });
 
-        
+
         /***** DEMO CONTENT, CAN BE REMOVED ******/
         $("#account-builder").on('mouseenter', function() {
             TweenMax.to($(this), 0.35, {
@@ -374,7 +374,7 @@ $(function() {
             var l = Ladda.create(this);
             l.start();
             setTimeout(function() {
-                window.location.href = "dashboard.html";
+                window.location.href = "index.html";
             }, 2000);
         }
         else {
